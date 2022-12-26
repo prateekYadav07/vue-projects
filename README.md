@@ -1,2 +1,2 @@
 # vue-projects
-Learning projects of vue
+Learning vue via projects
