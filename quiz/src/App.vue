@@ -1,32 +1,126 @@
 <template>
   <div class="ctr">
-    <div class="questions-ctr">
-      <div class="progress">
-        <div class="bar"></div>
-        <div class="status">1 of 3 questions answered</div>
-      </div>
-      <div class="single-question">
-        <div class="question">Sample Question 1</div>
-        <div class="answers">
-          <div class="answer">Sample Answer 1</div>
-          <div class="answer">Sample Answer 2</div>
-          <div class="answer">Sample Answer 3</div>
-          <div class="answer">Sample Answer 4</div>
-        </div>
-      </div>
-    </div>
-    <div class="result">
-      <div class="title">You got sample result 1</div>
-      <div class="desc">
-        short description about the result
-      </div>
-    </div>
-    <button type="reset" class="reset-btn">Reset</button>
+    <QuestionsVue
+      v-if="questionsAnswered < questions.length"
+      :qAns="questionsAnswered"
+      :questions="questions"
+      :currQues="currentQuestion"
+      @answerClicked="answered"
+    ></QuestionsVue>
+    <ResultVue v-else :results="results" :currAns="correctAnswers"></ResultVue>
+    <button type="reset" class="reset-btn" @click="reset">Reset</button>
   </div>
 </template>
 
 <script>
- export default {
-  name: 'App'
- }
+import QuestionsVue from "./components/Questions.vue";
+import ResultVue from "./components/Result.vue";
+
+export default {
+  name: "App",
+  components: {
+    QuestionsVue,
+    ResultVue,
+  },
+  data() {
+    return {
+      currentQuestion: 0,
+      questionsAnswered: 0,
+      correctAnswers: 0,
+      questions: [
+        {
+          q: "What is 2+2",
+          answers: [
+            {
+              text: 4,
+              is_correct: true,
+            },
+            {
+              text: 3,
+              is_correct: false,
+            },
+            {
+              text: "Fish",
+              is_correct: false,
+            },
+            {
+              text: 5,
+              is_correct: false,
+            },
+          ],
+        },
+        {
+          q: "How Many letters in Banana",
+          answers: [
+            {
+              text: 6,
+              is_correct: true,
+            },
+            {
+              text: 3,
+              is_correct: false,
+            },
+            {
+              text: "Fish",
+              is_correct: false,
+            },
+            {
+              text: 5,
+              is_correct: false,
+            },
+          ],
+        },
+        {
+          q: "What is 7*7",
+          answers: [
+            {
+              text: 4,
+              is_correct: false,
+            },
+            {
+              text: 49,
+              is_correct: true,
+            },
+            {
+              text: "Fish",
+              is_correct: false,
+            },
+            {
+              text: 5,
+              is_correct: false,
+            },
+          ],
+        },
+      ],
+      results: [
+        {
+          min: 0,
+          max: 2,
+          title: "Try again!",
+          desc: "Do a little more studying",
+        },
+        {
+          min: 3,
+          max: 3,
+          title: "genius",
+          desc: "bWAAAHHHHHHHHHHHHHHh",
+        },
+      ],
+    };
+  },
+  methods: {
+    answered(ans) {
+      this.currentQuestion += 1;
+      this.questionsAnswered += 1;
+      if (ans['is_correct']) {
+        this.correctAnswers += 1;
+      }
+    },
+    reset(){
+      this.questionsAnswered=0
+      this.currentQuestion=0
+      this.correctAnswers=0
+    }
+  },
+};
 </script>
