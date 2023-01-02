@@ -6,9 +6,18 @@
       :questions="questions"
       :currQues="currentQuestion"
       @answerClicked="answered"
+      @next="next"
+      @previous="previous"
     ></QuestionsVue>
     <ResultVue v-else :results="results" :currAns="correctAnswers"></ResultVue>
-    <button type="reset" class="reset-btn" @click="reset">Reset</button>
+    <button
+      type="reset"
+      class="reset-btn"
+      v-show="hideTheReset"
+      @click.prevent="reset"
+    >
+      Reset
+    </button>
   </div>
 </template>
 
@@ -112,15 +121,34 @@ export default {
     answered(ans) {
       this.currentQuestion += 1;
       this.questionsAnswered += 1;
-      if (ans['is_correct']) {
+      if (ans["is_correct"]) {
         this.correctAnswers += 1;
       }
     },
-    reset(){
-      this.questionsAnswered=0
-      this.currentQuestion=0
-      this.correctAnswers=0
-    }
+    reset() {
+      this.questionsAnswered = 0;
+      this.currentQuestion = 0;
+      this.correctAnswers = 0;
+    },
+
+    next() {
+      if (
+        this.questionsAnswered < this.questions.length &&
+        this.currentQuestion < this.questions.length
+      ) {
+        this.currentQuestion += 1;
+      }
+    },
+    previous() {
+      if (this.currentQuestion > 0) {
+        this.currentQuestion -= 1;
+      }
+    },
+  },
+  computed: {
+    hideTheReset() {
+      return this.questionsAnswered === this.questions.length ? true : false;
+    },
   },
 };
 </script>
